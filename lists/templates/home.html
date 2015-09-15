@@ -4,6 +4,8 @@
 	</head>
 	<body>
 		<h1>Your To-Do list</h1>
+		<h3 id="statusku">Status :</h3>
+		<input id ="status" placeholder="belum didefine"/>
 		<form method="POST">
 			<input name="item_text" id ="id_new_item" placeholder="Enter a to-do item" />
 			{% csrf_token %}

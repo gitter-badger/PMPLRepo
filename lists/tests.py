@@ -34,8 +34,7 @@ class HomePageTest(TestCase):
 		request.POST['item_text'] = 'A new list item'
 
 		response = home_page(request)
-
-		self.assertEqual(response.status_code, 200)
+		self.assertEqual(response.status_code, 302)
 		self.assertEqual(response['location'], '/')
 	
 	def test_home_page_only_saves_items_when_necessary(self):
@@ -52,7 +51,18 @@ class HomePageTest(TestCase):
 		self.assertIn('itemey 1', response.content.decode())
 		self.assertIn('itemey 2', response.content.decode())
 
+	def test_komentar_pribadi_otomatis(self):
+		count_item = Item.objects.all()
+		request = HttpRequest()
+		home_page(request)
+		if count_item.count() == 0:
+			self.assertEqual(count_item.count(), 0, "yey, waktunya libur")
+		elif count_item.count() != 0  and count_item.count() < 5 :
+			self.assertEqual(count_item.count(), 5, "sibuk tapi santai")
+		else:
+			self.assertGreaterEqual(count_item.count(), 5, "oh,tidak")
 
+ 
 class ItemModelTest(TestCase):
 	
 	def test_saving_and_retrieving_items(self):
