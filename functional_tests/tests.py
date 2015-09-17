@@ -1,8 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import unittest
+from django.test import LiveServerTestCase
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
 	def setUp(self):
 		self.browser = webdriver.Firefox()
 		self.browser.implicitly_wait(3)
@@ -16,7 +16,7 @@ class NewVisitorTest(unittest.TestCase):
 		self.assertIn(row_text, [row.text for row in rows])
 
 	def test_can_start_a_list_and_retrieve_it_later(self):
-		self.browser.get('http://localhost:8000')
+		self.browser.get(self.live_server_url)
 	
 		self.assertIn('To-Do', self.browser.title)
 		header_text = self.browser.find_element_by_tag_name('h1').text
@@ -49,22 +49,18 @@ class NewVisitorTest(unittest.TestCase):
 		)
 		
 		count = 0
-		status_text = self.browser.find_element_by_id('status')
 		statusku = self.browser.find_element_by_id('statusku')
 		for row in rows:
 			count = count + 1
 	
 		if count == 0:
-			self.assertNotIn('yey, waktunya libur', statusku.text)
+			self.assertIn('yey, waktunya libur', statusku.text)
 			self.fail('yey, waktunya libur')
 		elif count !=0 and count < 5:
-			self.assertNotIn('sibuk tapi santai', statusku.text)
+			self.assertIn('sibuk tapi santai', statusku.text)
 			self.fail('sibuk tapi santai')
 		else:
-			self.assertNotIn('oh tidak', statusku.text)
+			self.assertIn('oh tidak', statusku.text)
 			self.fail('oh tidak')
 	
-		#self.fail('Finish the test!')
-		
-if __name__ == '__main__':
-	unittest.main(warnings='ignore')	
+		#self.fail('Finish the test!')	
