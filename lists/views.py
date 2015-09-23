@@ -3,12 +3,20 @@ from django.http import HttpResponse
 from lists.models import Item, List
 
 def home_page(request):
-	return render(request, 'home.html')
+	return render(request, 'home.html', {'comment' : 'yey,waktunya libur'})
 
 def view_list(request, list_id):
 	list_ = List.objects.get(id=list_id)
 	#items= Item.objects.filter(list=list_)
-	return render(request, 'list.html', {'list' : list_})
+	jumlah_item = Item.objects.filter(list=list_).count()
+	str =''
+	if jumlah_item == 0:
+		str = 'yey,waktunya libur'
+	elif jumlah_item < 5:
+		str = 'sibuk, tapi santai'
+	else:
+		str = 'oh tidak'
+	return render(request, 'list.html', {'list' : list_ , 'comment' : str} )
 
 def new_list(request):
 	list_ = List.objects.create()

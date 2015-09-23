@@ -6,13 +6,7 @@
 		<h1>Your To-Do list</h1>
 		<h3>Status Komentar :</h3>
 		<p id ="statusku">
-		{% if items.count == 0 %}
-			 yey, waktunya berlibur
-		{% elif items.count <  5 %}
-			 sibuk, tapi santai
-		{% else %}
-			oh tidak
-		{% endif %}
+		{{ comment }}
 		</p>
 		<form method="POST" action="/lists/{{ list.id }}/add_item">
 			<input name="item_text" id ="id_new_item" placeholder="Enter a to-do item" />
