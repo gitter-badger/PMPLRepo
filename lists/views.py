@@ -9,6 +9,10 @@ def home_page(request):
 def view_list(request, list_id):
 	list_ = List.objects.get(id=list_id)
 	#items= Item.objects.filter(list=list_)
+	if request.method == 'POST':
+		Item.objects.create(text=request.POST['item_text'], list=list_)	
+		return redirect('/lists/%d/' % (list_.id,))
+
 	jumlah_item = Item.objects.filter(list=list_).count()
 	str =''
 	if jumlah_item == 0:
@@ -16,8 +20,9 @@ def view_list(request, list_id):
 	elif jumlah_item < 5:
 		str = 'sibuk, tapi santai'
 	else:
-		str = 'oh tidak'
-	return render(request, 'list.html', {'list' : list_ , 'comment' : str} )
+		str = 'oh tidak'	
+
+	return render(request, 'list.html', {'list': list_ , 'comment': str} )
 
 def new_list(request):
 	list_ = List.objects.create()
@@ -31,7 +36,7 @@ def new_list(request):
 		return render(request, 'home.html', {"error": error})
 	return redirect('/lists/%d/' % (list_.id,))
 
-def add_item(request, list_id):
-	list_ = List.objects.get(id=list_id)
-	Item.objects.create(text=request.POST['item_text'], list=list_)	
-	return redirect('/lists/%d/' % (list_.id,))
+#def add_item(request, list_id):
+#	list_ = List.objects.get(id=list_id)
+#	Item.objects.create(text=request.POST['item_text'], list=list_)	
+#	return redirect('/lists/%d/' % (list_.id,))
