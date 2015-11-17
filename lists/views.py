@@ -8,11 +8,16 @@ def home_page(request):
 
 def view_list(request, list_id):
 	list_ = List.objects.get(id=list_id)
-	#items= Item.objects.filter(list=list_)
+	error = None
+	
 	if request.method == 'POST':
-		Item.objects.create(text=request.POST['item_text'], list=list_)	
-		return redirect('/lists/%d/' % (list_.id,))
-
+		try:	
+			item = Item(text=request.POST.get("item_text"), list=list_)
+			item.full_clean()
+			item.save()
+			return redirect('/lists/%d/' % (list_.id,))
+		except ValidationError:
+			error = "You can't have an empty list item"
 	jumlah_item = Item.objects.filter(list=list_).count()
 	str =''
 	if jumlah_item == 0:
@@ -22,7 +27,7 @@ def view_list(request, list_id):
 	else:
 		str = 'oh tidak'	
 
-	return render(request, 'list.html', {'list': list_ , 'comment': str} )
+	return render(request, 'list.html', {'list': list_, 'error': error, 'comment': str} )
 
 def new_list(request):
 	list_ = List.objects.create()
